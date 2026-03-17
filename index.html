@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Video Downloader</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: white;
+  text-align: center;
+}
+
+.container {
+  padding: 20px;
+}
+
+h1 {
+  color: #00ffd5;
+}
+
+input {
+  width: 80%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+button {
+  padding: 12px 25px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 8px;
+  background: #00ffd5;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.card {
+  margin-top: 25px;
+  padding: 15px;
+  background: rgba(0,0,0,0.5);
+  border-radius: 10px;
+}
+
+img {
+  width: 200px;
+  border-radius: 10px;
+}
+
+video {
+  width: 300px;
+  margin-top: 10px;
+  border-radius: 10px;
+}
+
+a {
+  display: inline-block;
+  margin: 10px;
+  padding: 10px 15px;
+  background: #00ffd5;
+  color: black;
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+/* 🔥 Loading Animation */
+.loader {
+  border: 4px solid #ccc;
+  border-top: 4px solid #00ffd5;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin: 20px auto;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+/* 🔥 Animated Text */
+.animated-text {
+  margin-top: 40px;
+  font-size: 20px;
+  font-weight: bold;
+  animation: colorChange 3s infinite;
+}
+
+@keyframes colorChange {
+  0% { color: #00ffd5; }
+  25% { color: #ff00ff; }
+  50% { color: #ffff00; }
+  75% { color: #00ff00; }
+  100% { color: #00ffd5; }
+}
+
+/* Download List */
+.list {
+  margin-top: 20px;
+  text-align: left;
+  padding: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>🔥 Video Downloader</h1>
+
+  <p>📌 Facebook Only</p>
+
+  <input id="url" placeholder="Paste Facebook video link">
+  <br>
+  <button onclick="downloadVideo()">Download</button>
+
+  <div id="result"></div>
+
+  <h3>📥 Total Downloads: <span id="count">0</span></h3>
+  <div id="history" class="list"></div>
+
+  <!-- Animated Name -->
+  <div class="animated-text">DV:I M A M 〰️</div>
+</div>
+
+<script>
+let count = 0;
+
+async function downloadVideo() {
+  let url = document.getElementById("url").value;
+  let result = document.getElementById("result");
+  let history = document.getElementById("history");
+
+  if (!url) {
+    alert("Enter a link first!");
+    return;
+  }
+
+  result.innerHTML = `<div class="loader"></div>`;
+
+  let api = "https://no-api.bbinl.site/api/facebook?url=" + encodeURIComponent(url);
+
+  try {
+    let res = await fetch(api);
+    let data = await res.json();
+
+    if (!data.success) {
+      result.innerHTML = "❌ Failed! Try another link.";
+      return;
+    }
+
+    let videoHD = data.data.links.hd;
+    let videoSD = data.data.links.sd;
+    let thumbnail = data.data.thumbnail;
+    let title = data.data.caption;
+    let author = data.data.author.name;
+
+    result.innerHTML = `
+      <div class="card">
+        <h3>${title}</h3>
+        <p>👤 ${author}</p>
+        <img src="${thumbnail}"><br>
+        <video controls src="${videoHD}"></video><br>
+        <a href="${videoHD}" download>⬇ Download HD</a>
+        <a href="${videoSD}" download>⬇ Download SD</a>
+      </div>
+    `;
+
+    // 🔥 Count Update
+    count++;
+    document.getElementById("count").innerText = count;
+
+    // 🔥 History List
+    let item = document.createElement("p");
+    item.innerText = "✔ " + title;
+    history.prepend(item);
+
+  } catch (err) {
+    result.innerHTML = "⚠️ API Error!";
+  }
+}
+</script>
+
+</body>
+</html>
