@@ -21,23 +21,33 @@ h1 {
   color: #00ffd5;
 }
 
+/* 🔥 Bigger Input */
 input {
-  width: 80%;
-  padding: 12px;
+  width: 90%;
+  padding: 15px;
   border: none;
-  border-radius: 8px;
-  margin-top: 20px;
+  border-radius: 10px;
+  margin-top: 40px;
+  font-size: 16px;
 }
 
+/* 🔥 Animated Button */
 button {
-  padding: 12px 25px;
-  margin-top: 15px;
+  padding: 12px 30px;
+  margin-top: 20px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   background: #00ffd5;
   color: black;
   font-weight: bold;
   cursor: pointer;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); background:#00ffaa; }
+  100% { transform: scale(1); }
 }
 
 .card {
@@ -85,7 +95,7 @@ a {
 
 /* 🔥 Animated Text */
 .animated-text {
-  margin-top: 40px;
+  margin-top: 120px; /* নিচে নামানো */
   font-size: 20px;
   font-weight: bold;
   animation: colorChange 3s infinite;
@@ -129,7 +139,10 @@ a {
 </div>
 
 <script>
-let count = 0;
+
+// 🔥 Load saved count
+let count = localStorage.getItem("downloadCount") || 0;
+document.getElementById("count").innerText = count;
 
 async function downloadVideo() {
   let url = document.getElementById("url").value;
@@ -171,9 +184,10 @@ async function downloadVideo() {
       </div>
     `;
 
-    // 🔥 Count Update
+    // 🔥 Count Update + Save
     count++;
     document.getElementById("count").innerText = count;
+    localStorage.setItem("downloadCount", count);
 
     // 🔥 History List
     let item = document.createElement("p");
@@ -187,4 +201,4 @@ async function downloadVideo() {
 </script>
 
 </body>
-</html>
+  </html>
